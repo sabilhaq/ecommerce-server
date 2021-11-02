@@ -7,9 +7,13 @@
     "dev": "nodemon ./bin/www"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "express-graphql": "^0.12.0",
+    "graphql": "^16.0.0",
     "mongoose": "^6.0.12",
     "morgan": "~1.9.1",
     "pg": "^8.7.1",

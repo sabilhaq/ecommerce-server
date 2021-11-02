@@ -5,7 +5,10 @@ const { Schema, model } = require("mongoose");
 
 const userSchema = Schema(
   {
-    username: String,
+    email: String,
+    password: String,
+    firstName: String,
+    lastName: String,
     token: String,
     chats: { type: Schema.Types.Mixed, default: {} },
   },

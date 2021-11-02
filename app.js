@@ -3,6 +3,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('mongoose');
+const { graphqlHTTP } = require('express-graphql');
+const cors = require('cors');
+
+var { schema, root } = require('./graphql/ProductSchema')
 
 main().catch(err => console.log(err));
 
@@ -23,5 +27,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+app.use('/graphql', cors(), graphqlHTTP({
+  schema: schema,
+  rootValue: root,
+  graphiql: true
+}));
 
 module.exports = app;
