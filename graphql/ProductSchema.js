@@ -19,7 +19,7 @@ const schema = buildSchema(`
     brand: String
     detail: String
     votes: Int!
-    quantity: Int
+    quantity: Int!
     price: Int!
     UserId: String
     variants: [Variant]
@@ -35,7 +35,7 @@ const schema = buildSchema(`
     brand: String
     detail: String
     votes: Int!
-    quantity: Int
+    quantity: Int!
     price: Int!
     UserId: String
     photos: [String]
@@ -57,7 +57,6 @@ const root = {
   getProducts: async (queryStringObj) => {
     try {
       const products = await services.getProducts(queryStringObj);
-      console.log("masuk root getProducts:", products, typeof products);
       return products;
     } catch (err) {
       throw err;
