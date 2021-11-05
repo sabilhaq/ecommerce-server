@@ -1,5 +1,5 @@
-const { buildSchema } = require("graphql");
-const services = require("../services");
+const { buildSchema } = require('graphql');
+const services = require('../services');
 
 const schema = buildSchema(`
   scalar Date
@@ -58,6 +58,14 @@ const root = {
     try {
       const products = await services.getProducts(queryStringObj);
       return products;
+    } catch (err) {
+      throw err;
+    }
+  },
+  getProduct: async ({ id }) => {
+    try {
+      const product = await services.getProduct(id);
+      return product;
     } catch (err) {
       throw err;
     }

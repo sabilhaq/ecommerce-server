@@ -14,6 +14,17 @@ const getProducts = async () => {
   }
 };
 
+const getProduct = async (id) => {
+  try {
+    const product = await models.Product.findOne({
+      where: { id },
+    });
+    return product;
+  } catch (err) {
+    throw err;
+  }
+};
+
 //Create new instance
 const createProduct = async (input) => {
   try {
@@ -77,6 +88,7 @@ const createProduct = async (input) => {
 
 module.exports = {
   getProducts,
+  getProduct,
   createProduct,
   // updateProduct,
   // deleteProduct,
