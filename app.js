@@ -11,7 +11,7 @@ var { schema, root } = require('./graphql/ProductSchema')
 main().catch(err => console.log(err));
 
 async function main() {
-  await mongoose.connect('mongodb://localhost:27017/marketplacedb');
+  await mongoose.connect('mongodb://localhost:27017/ecommercedb');
 }
 
 var indexRouter = require('./routes/index');
@@ -24,6 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors())
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
