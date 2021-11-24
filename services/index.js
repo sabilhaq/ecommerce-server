@@ -1,4 +1,6 @@
+const { v4: uuidv4 } = require('uuid');
 const models = require('../models');
+const User = require('../models/user');
 
 const getProducts = async () => {
   try {
@@ -86,10 +88,87 @@ const createProduct = async (input) => {
 //   });
 // };
 
+// Chat
+
+const getChats = async (sender, receiver) => {
+  try {
+    if (!sender || !receiver) {
+      return res.json([]);
+    }
+
+    const users = await User.find({
+      $or: [{ email: sender }, { email: receiver }],
+    });
+
+    let senderChats = [];
+    let receiverChats = [];
+
+    users.forEach((user) => {
+      if (user.chats[sender]) {
+        receiverChats = user.chats[sender].map((receiverChat) => {
+          return (receiverChat = { ...receiverChat, status: 'Receiver' });
+        });
+      }
+
+      if (user.chats[receiver]) {
+        senderChats = user.chats[receiver].map((senderChat) => {
+          return (senderChat = { ...senderChat, status: 'Sender' });
+        });
+      }
+    });
+
+    let listChat = senderChats.concat(receiverChats);
+
+    listChat.sort((a, b) => {
+      return a.createdAt - b.createdAt;
+    });
+
+    return listChat;
+  } catch (err) {
+    throw err;
+  }
+};
+
+const createChat = async (input) => {
+  try {
+    const sender = await User.findOne({ email: input.sender });
+    const receiver = await User.findById(input.receiver);
+
+    const receiverEmail = receiver.email;
+
+    const chat = {
+      content: input.content,
+      createdAt: Date.now(),
+      _id: uuidv4(),
+    };
+
+    if (!sender.chats[receiverEmail]) {
+      sender.chats[receiverEmail] = [];
+    }
+
+    sender.chats[receiverEmail].push(chat);
+
+    sender.markModified('chats');
+    sender.save();
+
+    const response = {
+      ...chat,
+      status: 'Sender',
+      sent: true,
+    };
+
+    return response;
+  } catch (err) {
+    throw err;
+  }
+};
+
 module.exports = {
   getProducts,
   getProduct,
   createProduct,
   // updateProduct,
   // deleteProduct,
+  getChats,
+  createChat,
 };

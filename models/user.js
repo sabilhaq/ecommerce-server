@@ -1,7 +1,7 @@
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
 const salt = 10;
 
-const { Schema, model } = require("mongoose");
+const { Schema, model } = require('mongoose');
 
 const userSchema = Schema(
   {
@@ -16,12 +16,12 @@ const userSchema = Schema(
   { strict: false }
 );
 
-userSchema.pre("save", function (next) {
+userSchema.pre('save', function (next) {
   this.password = bcrypt.hashSync(this.password, salt);
   next();
 });
 
-userSchema.pre("findOneAndUpdate", function (next) {
+userSchema.pre('findOneAndUpdate', function (next) {
   if (this._update.password) {
     this._update.password = bcrypt.hashSync(this._update.password, salt);
   }
@@ -32,4 +32,4 @@ userSchema.methods.verify = function (password) {
   return bcrypt.compareSync(password, this.password);
 };
 
-module.exports = model("User", userSchema);
+module.exports = model('User', userSchema);

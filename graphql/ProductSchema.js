@@ -12,7 +12,7 @@ const schema = buildSchema(`
   }
 
   type Product { 
-    id: Int!
+    id: String!
     title: String!
     rate: Int!
     description: String
@@ -29,6 +29,7 @@ const schema = buildSchema(`
   }
 
   input ProductInput {
+    id: String!
     title: String!
     rate: Int!
     description: String
@@ -37,19 +38,39 @@ const schema = buildSchema(`
     votes: Int!
     quantity: Int!
     price: Int!
-    UserId: String
+    UserId: String!
     photos: [String]
+  }
+
+
+  type Chat { 
+    _id: String!
+    status: String!
+    content: String
+    sent: Boolean!
+    createdAt: Date
+    updatedAt: Date
+  }
+
+  input ChatInput {
+    content: String!
+    sender: String! 
+    receiver: String
   }
 
   type Query {
     getProducts(page: Int, offset: Int, limit: Int, name: String, phone: String): [Product]
-    getProduct(id: Int!): Product
+    getProduct(id: String!): Product
+
+    getChats(sender: String!, receiver: String!): [Chat]
   }
 
   type Mutation {
     createProduct(input: ProductInput): Product
     updateProduct(id: Int!, input: ProductInput): Product
     deleteProduct(id: Int!): Product
+
+    createChat(input: ChatInput): Chat
   }
 `);
 
@@ -90,6 +111,23 @@ const root = {
     try {
       const product = await services.deleteProduct(id);
       return product;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  getChats: async ({ sender, receiver }) => {
+    try {
+      const chats = await services.getChats(sender, receiver);
+      return chats;
+    } catch (err) {
+      throw err;
+    }
+  },
+  createChat: async ({ input }) => {
+    try {
+      const chat = await services.createChat(input);
+      return chat;
     } catch (err) {
       throw err;
     }
