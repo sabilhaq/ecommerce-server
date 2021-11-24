@@ -2,9 +2,17 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 
-/* GET users listing. */
-router.get('/', function (req, res, next) {
-  res.send('respond with a resource');
+router.get('/', async function (req, res, next) {
+  try {
+    const user = await User.find({ token: req.query.token });
+    let contacts = [];
+    for (const contactEmail in user[0].chats) {
+      contacts.push(contactEmail);
+    }
+    res.json(contacts);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 router.post('/', async function (req, res, next) {
