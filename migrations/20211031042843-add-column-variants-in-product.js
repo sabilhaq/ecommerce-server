@@ -18,6 +18,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    return queryInterface.removeColumn('Product', 'variants');
+    return queryInterface.removeColumn('Products', 'variants');
   },
 };
