@@ -3,16 +3,17 @@ var router = express.Router();
 var User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const accessTokenSecret = 'secret';
+const bcrypt = require('bcrypt');
 
 router.post('/auth', async function (req, res, next) {
   try {
     let user = await User.findOne({ email: req.body.email });
     if (!user) {
-      res.status(500).json({ err: 'Invalid email or password' });
+      return res.status(500).json({ err: 'Invalid email or password' });
     }
 
     if (!user.verify(req.body.password)) {
-      res.status(500).json({ err: 'Invalid email or password' });
+      return res.status(500).json({ err: 'Invalid email or password' });
     }
 
     if (!user.token) {
@@ -33,13 +34,14 @@ router.post('/auth', async function (req, res, next) {
     }
 
     const response = {
+      userId: user._id,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
       token: user.token,
     };
 
-    return res.json(response);
+    res.json(response);
   } catch (err) {
     res.status(500).json(err);
   }
