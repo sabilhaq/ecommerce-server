@@ -1,17 +1,32 @@
 const { v4: uuidv4 } = require('uuid');
 const models = require('../models');
 const User = require('../models/user');
+const { Sequelize } = require('sequelize');
 
-const getProducts = async () => {
+const getProducts = async (queryStringObj) => {
   try {
+    let { page, title } = queryStringObj;
+    page = page ? page : 1;
+    title = title ? title : '';
+    let limit = title ? null : 4;
+
     const products = await models.Product.findAll({
+      where: {
+        title: {
+          [Sequelize.Op.iLike]: `%${title}%`,
+        },
+      },
+      offset: (page - 1) * 4,
+      limit,
       order: [
         ['rate', 'DESC'],
         ['createdAt', 'DESC'],
       ],
     });
+    let tes = products.map((item) => item.dataValues);
     return products.map((item) => item.dataValues);
   } catch (err) {
+    console.error(err);
     throw err;
   }
 };

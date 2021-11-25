@@ -30,6 +30,7 @@ router.put('/:id', async function (req, res, next) {
     });
     res.status(201).json(product);
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });

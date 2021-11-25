@@ -59,7 +59,7 @@ const schema = buildSchema(`
   }
 
   type Query {
-    getProducts(page: Int, offset: Int, limit: Int, name: String, phone: String): [Product]
+    getProducts(page: Int, title: String): [Product]
     getProduct(id: String!): Product
 
     getChats(sender: String!, receiver: String!): [Chat]
